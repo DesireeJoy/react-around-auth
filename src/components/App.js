@@ -43,23 +43,6 @@ function App() {
   React.useEffect(() => {
     handleCheckToken();
   }, []);
-  function handleCheckToken() {
-    const jwt = localStorage.getItem("jwt");
-
-    if (jwt) {
-      auth
-        .checkToken(jwt)
-        .then((res) => {
-          if (res) {
-            const userEmail = res.data.email;
-            setUserEmail(userEmail);
-            setLoggedIn(true);
-            history.push("/");
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-  }
 
   function handleDeleteConfirm(e) {
     e.preventDefault();
@@ -187,10 +170,10 @@ function App() {
     setSelectedCard(card);
     setIsDeleteOpen(true);
   }
+
   function handleLogin(email, password) {
     auth
       .authorize(email, password)
-
       .then((res) => {
         handleCheckToken();
 
