@@ -4,13 +4,20 @@ import Footer from "./Footer.js";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import React, { useState, useEffect } from "react";
-import { Switch, Route, useHistory } from "react-router-dom";
+import { Switch, Route, useHistory, BrowserRouter } from "react-router-dom";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import DeleteConfirmPopup from "./DeleteConfirmPopup";
+import ProtectedRoute from "./ProtectedRoute";
+import Register from "./Register";
+import Login from "./Login";
+import InfoToolTip from "./InfoToolTip";
+import * as auth from "../utils/auth";
+import successIcon from "../images/successIcon.png";
+import rejectIcon from "../images/rejectIcon.png";
 
 function App() {
   //States
@@ -22,10 +29,37 @@ function App() {
   );
   const [isAddPlaceOpen, setIsAddPlaceOpen] = React.useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [enlargeImage, setEnlargeImage] = useState(false);
+  const [enlargeImage, setEnlargeImage] = React.useState(false);
+  const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [userEmail, setUserEmail] = React.useState("");
+  const [toolTipMessage, setToolTipMessage] = React.useState("");
+  const [toolTipImage, setToolTipImage] = React.useState("");
+  const history = useHistory();
+
+  React.useEffect(() => {
+    handleCheckToken();
+  }, []);
+  function handleCheckToken() {
+    const jwt = localStorage.getItem("jwt");
+
+    if (jwt) {
+      auth
+        .checkToken(jwt)
+        .then((res) => {
+          if (res) {
+            const userEmail = res.data.email;
+            setUserEmail(userEmail);
+            setLoggedIn(true);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 
   function handleDeleteConfirm(e) {
     e.preventDefault();
@@ -153,18 +187,97 @@ function App() {
     setSelectedCard(card);
     setIsDeleteOpen(true);
   }
+  function handleLogin(email, password) {
+    auth
+      .authorize(email, password)
+
+      .then((res) => {
+        handleCheckToken();
+
+        history.push("/");
+      })
+
+      .catch((res) => {
+        if (res === 400) {
+          console.log("one of the fields was filled in in correctly");
+        }
+        if (res === 401) {
+          console.log("user email not found");
+        }
+      });
+  }
+
+  function handleRegister(email, password) {
+    auth
+      .register(email, password)
+      .then((res) => {
+        if (!res) {
+          setToolTipMessage("One of the fields was filled incorrectly");
+          setToolTipImage(rejectIcon);
+          setIsInfoToolTipOpen(true);
+        } else {
+          setToolTipMessage("Success! You have now been registered.");
+          setToolTipImage(successIcon);
+          setIsInfoToolTipOpen(true);
+          setUserEmail(userEmail);
+
+          history.push("/signin");
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleSignOut() {
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+    setUserEmail("");
+    history.push("/signin");
+  }
+
+  function handleCheckToken() {
+    const jwt = localStorage.getItem("jwt");
+
+    if (jwt) {
+      auth
+        .checkToken(jwt)
+        .then((res) => {
+          if (res) {
+            const userEmail = res.data.email;
+            setUserEmail(userEmail);
+            setLoggedIn(true);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
   return (
     <div>
       <div className="body">
         <div className="page">
           <CurrentUserContext.Provider value={currentUser}>
             <Switch>
-              <Route path="/signup"></Route>
-              <Route path="/signin"></Route>
-              <Header />
+              <Route path="/signup">
+                <Header link={"/signin"} text={"Login"} />
+                <Register handleRegister={handleRegister} />
+              </Route>
+              <Route path="/signin">
+                <Header link={"/signin"} text={"Register"} />
+                <Login handleLogin={handleLogin} />
+              </Route>
+              <Header
+                link={"/signin"}
+                text={"Log out"}
+                userEmail={userEmail}
+                handleSignOut={handleSignOut}
+              />
             </Switch>
 
-            <Main
+            <ProtectedRoute
+              path="/"
+              component={Main}
+              loggedIn={loggedIn}
               handleEditAvatarClick={handleEditAvatarClick}
               handleEditProfileClick={handleEditProfileClick}
               handleAddPlaceClick={handleAddPlaceClick}
@@ -173,6 +286,7 @@ function App() {
               onCardLike={handleCardLike}
               onCardDeleteClick={handleDeleteWarn}
             />
+
             <ImagePopup
               onClose={closeAllPopups}
               selectedCard={selectedCard}
@@ -200,6 +314,12 @@ function App() {
               isOpen={isEditProfilePopupOpen}
               onClose={closeAllPopups}
               onUpdateUser={handleUpdateUser}
+            />
+            <InfoToolTip
+              isOpen={isInfoToolTipOpen}
+              onClose={closeAllPopups}
+              message={toolTipMessage}
+              imageURL={toolTipImage}
             />
             <Footer />
           </CurrentUserContext.Provider>
