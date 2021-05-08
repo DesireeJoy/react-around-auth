@@ -121,6 +121,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsDeleteOpen(false);
     setEnlargeImage(false);
+    setIsInfoToolTipOpen(false);
   }
   function handleCardClick(card) {
     setEnlargeImage(true);
@@ -175,12 +176,16 @@ function App() {
     auth
       .authorize(email, password)
       .then((res) => {
+        if (!res) {
+          setToolTipMessage("Your login has failed.");
+          setToolTipImage(rejectIcon);
+          setIsInfoToolTipOpen(true);
+        }
         handleCheckToken();
-        history.push("/");
       })
       .catch((res) => {
         if (res === 400) {
-          console.log("one of the fields was filled in in correctly");
+          console.log("A fields was completed incorrectly");
         }
         if (res === 401) {
           console.log("user email not found");
@@ -195,7 +200,7 @@ function App() {
         if (!res) {
           setToolTipMessage("One of the fields was filled incorrectly");
           setToolTipImage(rejectIcon);
-          setIsInfoToolTipOpen(false);
+          setIsInfoToolTipOpen(true);
         } else {
           setToolTipMessage("Success! You have now been registered.");
           setToolTipImage(successIcon);
@@ -217,8 +222,7 @@ function App() {
 
   function handleCheckToken() {
     const jwt = localStorage.getItem("jwt");
-
-    if (jwt) {
+    if (typeof jwt !== "undefined") {
       auth
         .checkToken(jwt)
         .then((res) => {
@@ -229,7 +233,9 @@ function App() {
             history.push("/");
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log("Err: " + err);
+        });
     }
   }
 
