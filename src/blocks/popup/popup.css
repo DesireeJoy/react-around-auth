@@ -7,6 +7,7 @@
 @import url("./__form/_input_type/popup__form_input_type_error.css");
 @import url("./__image/_cont/popup__image_cont.css");
 @import url("./__image/_wrap/popup__image_wrap.css");
+@import url("./__toolTip/popup__toolTip.css");
 
 .popup {
   height: 100%;

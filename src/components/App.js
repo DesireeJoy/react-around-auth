@@ -176,10 +176,8 @@ function App() {
       .authorize(email, password)
       .then((res) => {
         handleCheckToken();
-
         history.push("/");
       })
-
       .catch((res) => {
         if (res === 400) {
           console.log("one of the fields was filled in in correctly");
@@ -197,7 +195,7 @@ function App() {
         if (!res) {
           setToolTipMessage("One of the fields was filled incorrectly");
           setToolTipImage(rejectIcon);
-          setIsInfoToolTipOpen(true);
+          setIsInfoToolTipOpen(false);
         } else {
           setToolTipMessage("Success! You have now been registered.");
           setToolTipImage(successIcon);
@@ -246,7 +244,7 @@ function App() {
                 <Register handleRegister={handleRegister} />
               </Route>
               <Route path="/signin">
-                <Header link={"/signin"} text={"Register"} />
+                <Header link={"/signup"} text={"Register"} />
                 <Login handleLogin={handleLogin} />
               </Route>
               <Header
