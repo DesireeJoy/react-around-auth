@@ -40,10 +40,6 @@ function App() {
   const [toolTipImage, setToolTipImage] = React.useState("");
   const history = useHistory();
 
-  React.useEffect(() => {
-    handleCheckToken();
-  }, []);
-
   function handleDeleteConfirm(e) {
     e.preventDefault();
     setIsDeleteOpen(false);
