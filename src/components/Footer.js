@@ -1,6 +1,3 @@
-import logo from "../images/Logo.svg";
-import { render } from "react-dom";
-
 function Footer(props) {
   return (
     <footer className="footer">

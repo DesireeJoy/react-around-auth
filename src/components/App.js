@@ -253,26 +253,21 @@ function App() {
                 <Header link={"/signup"} text={"Register"} />
                 <Login handleLogin={handleLogin} />
               </Route>
-              <Header
-                link={"/signin"}
-                text={"Log out"}
+              <ProtectedRoute
+                path="/"
+                component={Main}
                 userEmail={userEmail}
                 handleSignOut={handleSignOut}
+                loggedIn={loggedIn}
+                handleEditAvatarClick={handleEditAvatarClick}
+                handleEditProfileClick={handleEditProfileClick}
+                handleAddPlaceClick={handleAddPlaceClick}
+                handleCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDeleteClick={handleDeleteWarn}
               />
             </Switch>
-
-            <ProtectedRoute
-              path="/"
-              component={Main}
-              loggedIn={loggedIn}
-              handleEditAvatarClick={handleEditAvatarClick}
-              handleEditProfileClick={handleEditProfileClick}
-              handleAddPlaceClick={handleAddPlaceClick}
-              handleCardClick={handleCardClick}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDeleteClick={handleDeleteWarn}
-            />
 
             <ImagePopup
               onClose={closeAllPopups}

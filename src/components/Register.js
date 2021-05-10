@@ -11,7 +11,7 @@ function Register(props) {
     props.handleRegister(email, password);
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
-      history.push("/");
+      history.push("/signin");
     }
   }
 

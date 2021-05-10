@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Header from "./Header.js";
 import api from "../utils/api";
 import Card from "./Card";
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -8,6 +9,12 @@ function Main(props) {
 
   return (
     <main className="content">
+      <Header
+        link={"/signin"}
+        text={"Log out"}
+        userEmail={props.userEmail}
+        handleSignOut={props.handleSignOut}
+      />
       {/* Profile Section */}
       <section className="profile">
         <form className="profile__info-area">
