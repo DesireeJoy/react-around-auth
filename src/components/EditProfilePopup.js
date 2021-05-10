@@ -28,7 +28,7 @@ function EditProfilePopup(props) {
   React.useEffect(() => {
     setName(currentUser.name);
     setAbout(currentUser.about);
-  }, [currentUser, props.isEditProfilePopupOpen]);
+  }, [currentUser, props.isOpen]);
 
   return (
     <PopupWithForm
@@ -43,7 +43,7 @@ function EditProfilePopup(props) {
         type="text"
         className="popup__input form_input"
         id="inputName"
-        defaultValue={currentUser.name}
+        value={name || ""}
         name="profileName"
         minLength={2}
         maxLength={40}
@@ -58,7 +58,7 @@ function EditProfilePopup(props) {
         type="text"
         className="popup__input form_input"
         id="inputTitle"
-        defaultValue={currentUser.about}
+        value={about || ""}
         name="profileTitle"
         minLength={2}
         maxLength={200}

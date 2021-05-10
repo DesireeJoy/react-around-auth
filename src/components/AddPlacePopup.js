@@ -51,7 +51,7 @@ function AddPlacePopup(props) {
         name="placeFileName"
         onChange={handleCardLink}
         value={cardLink}
-        placeholder={cardLink}
+        placeholder="Link"
       />
       <span
         className="popup__form_input_type_active inputFile-error error"

@@ -218,7 +218,7 @@ function App() {
 
   function handleCheckToken() {
     const jwt = localStorage.getItem("jwt");
-    if (typeof jwt !== "undefined") {
+    if (typeof jwt !== undefined) {
       auth
         .checkToken(jwt)
         .then((res) => {
