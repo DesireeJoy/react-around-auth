@@ -9,10 +9,6 @@ function Register(props) {
   function handleSubmit(e) {
     e.preventDefault();
     props.handleRegister(email, password);
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      history.push("/signin");
-    }
   }
 
   return (

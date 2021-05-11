@@ -133,6 +133,7 @@ function App() {
       .catch((err) => console.log(err));
   }
   React.useEffect(() => {
+    handleCheckToken();
     api
       .getInitialCards()
       .then((res) => {
