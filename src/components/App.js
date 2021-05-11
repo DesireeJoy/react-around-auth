@@ -58,16 +58,6 @@ function App() {
       .then((res) => {
         setCurrentUser(res);
       })
-      .then(() => {
-        api
-          .getCardList()
-
-          .then((res) => {
-            setCards(res);
-          })
-
-          .catch((err) => console.log(err));
-      })
       .catch((err) => console.log(err));
   }, []);
 
