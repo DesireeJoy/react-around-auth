@@ -14,9 +14,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "nodemon app.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && scp -r ./build/* DesireeAzure@52.188.108.32:/home/DesireeAzure/around-frontend"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +37,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
